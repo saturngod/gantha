@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="my">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gantha</title>
+    <link rel="stylesheet" href="styles/fonts.css">
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="book-title">Gantha</h1>
+        <button class="icon-btn settings-btn" id="settingsBtn" aria-label="Settings">
+            <i class="fas fa-cog"></i>
+        </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Previous Chapter Button -->
+        <a href="setup.html" class="nav-btn nav-btn-prev" aria-label="Previous Chapter">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+
+        <!-- Reading Area -->
+        <article class="reading-area">
+            <h1>Fonts and Styling</h1>
+<p>Gantha provides flexible font and styling options to ensure your book looks great, especially for Myanmar content. This guide covers how to customize fonts, adjust typography, and modify the visual appearance of your book.</p>
+<h2>Font Configuration</h2>
+<h3>Font List Configuration</h3>
+<p>The available fonts are defined in <code>template/scripts/fonts.js</code>. This file contains an array of font objects that appear in the font selector.</p>
+<p><strong>Current structure in <code>template/scripts/fonts.js</code></strong>:</p>
+<pre><code class="language-javascript">var fonts = [
+    {
+        id: &#39;system&#39;,
+        name: &#39;System Font&#39;,
+        className: &#39;&#39;,
+        sample: &#39;နမူနာ Sample ABC 123&#39;
+    },
+    {
+        id: &#39;sanpya&#39;,
+        name: &#39;Myanmar Sanpya&#39;,
+        className: &#39;font-sanpya&#39;,
+        sample: &#39;နမူနာ Sample ABC 123&#39;
+    },
+    {
+        id: &#39;stadium&#39;,
+        name: &#39;Masterpiece Stadium&#39;,
+        className: &#39;font-masterpiece-stadium&#39;,
+        sample: &#39;နမူနာ Sample ABC 123&#39;
+    },
+    {
+        id: &#39;unitype&#39;,
+        name: &#39;Masterpiece UniType&#39;,
+        className: &#39;font-masterpiece-unitype&#39;,
+        sample: &#39;နမူနာ Sample ABC 123&#39;
+    },
+    {
+        id: &#39;sanpro&#39;,
+        name: &#39;Myanmar San Pro&#39;,
+        className: &#39;font-sanpro&#39;,
+        sample: &#39;နမူနာ Sample ABC 123&#39;
+    }
+];
+</code></pre>
+<p><strong>Font object properties</strong>:</p>
+<ul>
+<li><code>id</code>: Unique identifier for the font</li>
+<li><code>name</code>: Display name shown in the font selector</li>
+<li><code>className</code>: CSS class applied when this font is selected</li>
+<li><code>sample</code>: Preview text showing how the font looks (includes Myanmar text)</li>
+</ul>
+<p><strong>Adding new fonts</strong>:</p>
+<ol>
+<li>Add a new font object to the array in <code>fonts.js</code></li>
+<li>Create corresponding CSS class in <code>styles/fonts.css</code></li>
+<li>Rebuild your project to see the changes</li>
+</ol>
+<p><strong>Example of adding a new font</strong>:</p>
+<pre><code class="language-javascript">{
+    id: &#39;noto-myanmar&#39;,
+    name: &#39;Noto Sans Myanmar&#39;,
+    className: &#39;font-noto-myanmar&#39;,
+    sample: &#39;နမူနာ Sample ABC 123&#39;
+}
+</code></pre>
+<h3>Font Size Adjustment</h3>
+<p>Font size controls are handled in <code>template/scripts/fontsize.js</code>. This script provides dynamic font size adjustment for better readability.</p>
+<p><strong>Default font size settings</strong>:</p>
+<pre><code class="language-javascript">// Font size ranges and defaults
+const minFontSize = 12;
+const maxFontSize = 24;
+const defaultFontSize = 16;
+</code></pre>
+<p><strong>Customizing font size behavior</strong>:</p>
+<ul>
+<li>Modify the min/max ranges for font size controls</li>
+<li>Change the default font size</li>
+<li>Adjust the increment steps for font size changes</li>
+</ul>
+<h3>Line Height Configuration</h3>
+<p>Line height settings are managed in <code>template/scripts/lineheight.js</code>. Proper line height is crucial for readability, especially for Myanmar text.</p>
+<p><strong>Line height settings</strong>:</p>
+<pre><code class="language-javascript">// Line height options
+const lineHeights = [1.2, 1.4, 1.6, 1.8, 2.0];
+const defaultLineHeight = 1.6;
+</code></pre>
+<h2>CSS Font Configuration</h2>
+<h3>Main Font Styles</h3>
+<p>Font definitions are located in <code>template/styles/fonts.css</code>. This file contains the CSS rules for all typography.</p>
+<p><strong>Basic font structure</strong>:</p>
+<pre><code class="language-css">/* Myanmar font classes corresponding to fonts.js */
+.font-sanpya {
+    font-family: &#39;Myanmar Sanpya&#39;, &#39;Myanmar Text&#39;, sans-serif;
+}
+
+.font-masterpiece-stadium {
+    font-family: &#39;Masterpiece Stadium&#39;, &#39;Myanmar Text&#39;, sans-serif;
+}
+
+.font-masterpiece-unitype {
+    font-family: &#39;Masterpiece UniType&#39;, &#39;Myanmar Text&#39;, sans-serif;
+}
+
+.font-sanpro {
+    font-family: &#39;Myanmar San Pro&#39;, &#39;Myanmar Text&#39;, sans-serif;
+}
+
+/* Base typography */
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+}
+</code></pre>
+<h3>Myanmar Font Support</h3>
+<p>For optimal Myanmar language support, include appropriate fonts:</p>
+<pre><code class="language-css">/* Myanmar fonts */
+@import url(&#39;https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@300;400;500;600;700&amp;display=swap&#39;);
+
+.myanmar-text {
+    font-family: &#39;Noto Sans Myanmar&#39;, &#39;Myanmar Text&#39;, &#39;Pyidaungsu&#39;, sans-serif;
+    font-feature-settings: &#39;liga&#39; 1, &#39;kern&#39; 1;
+}
+</code></pre>
+<h3>Custom Font Integration</h3>
+<p><strong>Adding a new font</strong>:</p>
+<ol>
+<li>Add the font object to <code>fonts.js</code></li>
+<li>Define CSS class for the new font in <code>fonts.css</code></li>
+<li>Include font files or imports as needed</li>
+</ol>
+<p><strong>Example - Adding Noto Sans Myanmar</strong>:</p>
+<p><em>Step 1: Add to <code>template/scripts/fonts.js</code></em>:</p>
+<pre><code class="language-javascript">{
+    id: &#39;noto-myanmar&#39;,
+    name: &#39;Noto Sans Myanmar&#39;,
+    className: &#39;font-noto-myanmar&#39;,
+    sample: &#39;နမူနာ Sample ABC 123&#39;
+}
+</code></pre>
+<p><em>Step 2: Add CSS class to <code>template/styles/fonts.css</code></em>:</p>
+<pre><code class="language-css">@import url(&#39;https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@300;400;500;600;700&amp;display=swap&#39;);
+
+.font-noto-myanmar {
+    font-family: &#39;Noto Sans Myanmar&#39;, &#39;Myanmar Text&#39;, sans-serif;
+    font-feature-settings: &#39;liga&#39; 1, &#39;kern&#39; 1;
+}
+</code></pre>
+<h2>Typography Settings</h2>
+<h3>Headings</h3>
+<p>Customize heading styles for better hierarchy:</p>
+<pre><code class="language-css">h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+}
+
+h1 { font-size: 2.5em; }
+h2 { font-size: 2em; }
+h3 { font-size: 1.5em; }
+</code></pre>
+<h3>Body Text</h3>
+<p>Optimize body text for readability:</p>
+<pre><code class="language-css">p {
+    margin-bottom: 1em;
+    text-align: justify; /* For book-like appearance */
+    hyphens: auto; /* Automatic hyphenation */
+}
+
+/* Myanmar text specific */
+.myanmar p {
+    text-align: left; /* Left align for Myanmar */
+    word-break: keep-all;
+}
+</code></pre>
+<h2>Responsive Typography</h2>
+<p>Ensure your fonts work well across different screen sizes:</p>
+<pre><code class="language-css">/* Mobile adjustments */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.75em; }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+    body {
+        font-size: 18px;
+        line-height: 1.7;
+    }
+}
+</code></pre>
+<h2>Theme Customization</h2>
+<h3>Template Modification</h3>
+<p>For advanced customization, edit the main template at <code>template/index.html</code>:</p>
+<ol>
+<li><strong>Font selector interface</strong> - Modify the font dropdown</li>
+<li><strong>Typography controls</strong> - Add new font size/line height options</li>
+<li><strong>Theme switching</strong> - Implement dark/light mode</li>
+</ol>
+<h3>CSS Variables</h3>
+<p>Use CSS custom properties for easier theme management:</p>
+<pre><code class="language-css">:root {
+    --font-primary: &#39;Inter&#39;, sans-serif;
+    --font-secondary: &#39;Georgia&#39;, serif;
+    --font-myanmar: &#39;Noto Sans Myanmar&#39;, sans-serif;
+    
+    --font-size-base: 16px;
+    --line-height-base: 1.6;
+    
+    --color-text: #333;
+    --color-background: #fff;
+}
+</code></pre>
+<h2>Best Practices</h2>
+<h3>For Myanmar Content</h3>
+<ol>
+<li><strong>Use Unicode fonts</strong> - Ensure proper Myanmar Unicode support</li>
+<li><strong>Appropriate line spacing</strong> - Myanmar text often needs more line height</li>
+<li><strong>Font stacking</strong> - Provide fallback fonts for Myanmar text</li>
+<li><strong>Feature settings</strong> - Enable proper ligatures and kerning</li>
+</ol>
+<h3>For English Content</h3>
+<ol>
+<li><strong>Font pairing</strong> - Combine serif and sans-serif thoughtfully</li>
+<li><strong>Reading comfort</strong> - Optimize for long-form reading</li>
+<li><strong>Performance</strong> - Limit the number of font weights loaded</li>
+</ol>
+<h3>General Typography</h3>
+<ol>
+<li><strong>Hierarchy</strong> - Use consistent heading sizes and spacing</li>
+<li><strong>Contrast</strong> - Ensure sufficient color contrast for accessibility</li>
+<li><strong>Line length</strong> - Keep text columns at readable widths (45-75 characters)</li>
+<li><strong>Responsive design</strong> - Scale typography appropriately for different screens</li>
+</ol>
+<h2>Testing Fonts</h2>
+<p>After making changes:</p>
+<ol>
+<li><strong>Rebuild</strong> the project: <code>bun run build</code></li>
+<li><strong>Test rendering</strong> - Check both English and Myanmar text</li>
+<li><strong>Verify selectors</strong> - Ensure font dropdown works correctly</li>
+<li><strong>Check responsiveness</strong> - Test on different screen sizes</li>
+</ol>
+<h2>Troubleshooting</h2>
+<p><strong>Font not loading</strong>:</p>
+<ul>
+<li>Check font import statements in CSS</li>
+<li>Verify font names match exactly</li>
+<li>Ensure internet connection for web fonts</li>
+</ul>
+<p><strong>Myanmar text rendering issues</strong>:</p>
+<ul>
+<li>Use Unicode-compliant Myanmar fonts</li>
+<li>Check font-feature-settings for proper rendering</li>
+<li>Test with different Myanmar font stacks</li>
+</ul>
+<p><strong>Performance issues</strong>:</p>
+<ul>
+<li>Limit font weights and styles</li>
+<li>Use font-display: swap for better loading</li>
+<li>Consider hosting fonts locally for better performance</li>
+</ul>
+<p>Remember to rebuild your project after making any font or styling changes to see the updates in your generated website.</p>
+
+        </article>
+
+        <!-- Next Chapter Button -->
+        <a href="sample.html" class="nav-btn nav-btn-next" aria-label="Next Chapter">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </main>
+
+    <!-- Table of Contents Sidebar -->
+    <aside class="sidebar toc-sidebar" id="tocSidebar">
+        <div class="sidebar-header">
+            <h2>Table of Contents</h2>
+            <button class="close-btn" id="closeTocBtn" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="toc-content" id="tocContent">
+            <!-- TOC will be populated by JavaScript -->
+        </nav>
+    </aside>
+
+    <!-- Settings Sidebar -->
+    <aside class="sidebar settings-sidebar" id="settingsSidebar">
+        <div class="sidebar-header">
+            <h2>Settings</h2>
+            <button class="close-btn" id="closeSettingsBtn" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="settings-content">
+            <!-- Theme Settings -->
+            <section class="settings-section">
+                <h3>Theme</h3>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="theme" value="system" id="themeSystem">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">System</div>
+                            <div class="label-description">Follow system preference</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="theme" value="light" id="themeLight">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">Light</div>
+                            <div class="label-description">Light theme</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="theme" value="dark" id="themeDark">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">Dark</div>
+                            <div class="label-description">Dark theme</div>
+                        </div>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Font Settings -->
+            <section class="settings-section">
+                <h3>Font</h3>
+                <div id="fontOptions">
+                    <!-- Font options will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Font Size Settings -->
+            <section class="settings-section">
+                <h3>Font Size</h3>
+                <div id="fontSizeOptions">
+                    <!-- Font size options will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Line Height Settings -->
+            <section class="settings-section">
+                <h3>Line Height</h3>
+                <div id="lineHeightOptions">
+                    <!-- Line height options will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Text Alignment Settings -->
+            <section class="settings-section">
+                <h3>Text Alignment</h3>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="alignment" value="justify" id="alignJustify">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">Justify</div>
+                            <div class="label-description">Even text on both sides</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="alignment" value="start" id="alignStart">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">Left</div>
+                            <div class="label-description">Align text to the left</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="alignment" value="center" id="alignCenter">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">Center</div>
+                            <div class="label-description">Center aligned text</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="alignment" value="end" id="alignEnd">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">Right</div>
+                            <div class="label-description">Align text to the right</div>
+                        </div>
+                    </label>
+                </div>
+            </section>
+        </div>
+    </aside>
+
+    <!-- Backdrop -->
+    <div class="backdrop" id="backdrop"></div>
+
+    <script src="scripts/fonts.js"></script>
+    <script src="scripts/fontsize.js"></script>
+    <script src="scripts/lineheight.js"></script>
+    <script src="scripts/data.js"></script>
+    <script src="scripts/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/go.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>

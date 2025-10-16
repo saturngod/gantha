@@ -1,0 +1,29 @@
+{
+    "title": "Gantha",
+    "chapters": [
+        {
+            "id": "about",
+            "title": "About",
+            "subtitle": "",
+            "file": "about.md"
+        },
+        {
+            "id": "install",
+            "title": "Setup",
+            "subtitle": "Setup the book",
+            "file": "setup.md"
+        },
+        {
+            "id": "font",
+            "title": "Font",
+            "subtitle": "setup font and style",
+            "file": "font.md"
+        },
+        {
+            "id": "sample",
+            "title": "Sample",
+            "subtitle": "Sample Content",
+            "file": "sample.md"
+        }
+    ]
+}

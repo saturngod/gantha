@@ -1,0 +1,21 @@
+@font-face {font-family:"MyanmarSanpya";src:local('MyanmarSanpya'),url('https://cdn.jsdelivr.net/gh/saturngod/myanmar-unicode-fonts@master/docs/KhmerType/MyanmarSanpya.ttf') format('truetype');}
+@font-face {font-family:"MasterpieceStadium";src:local('MasterpieceStadium'),url('https://cdn.jsdelivr.net/gh/saturngod/myanmar-unicode-fonts@master/docs/masterpiece/MasterpieceStadium.ttf') format('truetype');}
+@font-face {font-family:"MasterpieceUniType";src:local('MasterpieceUniType'),url('https://cdn.jsdelivr.net/gh/saturngod/myanmar-unicode-fonts@master/docs/masterpiece/MasterpieceUniType.ttf') format('truetype');}
+@font-face {font-family:"MyanmarSansPro";src:local('MyanmarSansPro'),url('https://cdn.jsdelivr.net/gh/saturngod/myanmar-unicode-fonts@master/docs/unknown/MyanmarSansPro.ttf') format('truetype');}
+
+/* Font Classes - Applied only to reading area */
+.font-sanpya {
+    font-family: "MyanmarSanpya", sans-serif;
+}
+
+.font-masterpiece-stadium {
+    font-family: "MasterpieceStadium", sans-serif;
+}
+
+.font-masterpiece-unitype {
+    font-family: "MasterpieceUniType", sans-serif;
+}
+
+.font-sanpro {
+    font-family: "MyanmarSansPro", sans-serif;
+}

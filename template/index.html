@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="my">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="styles/fonts.css">
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="book-title">{{title}}</h1>
+        <button class="icon-btn settings-btn" id="settingsBtn" aria-label="Settings">
+            <i class="fas fa-cog"></i>
+        </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Previous Chapter Button -->
+        <a href="{{prev-link}}" class="nav-btn nav-btn-prev" aria-label="Previous Chapter">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+
+        <!-- Reading Area -->
+        <article class="reading-area">
+            {{content}}
+        </article>
+
+        <!-- Next Chapter Button -->
+        <a href="{{next-link}}" class="nav-btn nav-btn-next" aria-label="Next Chapter">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </main>
+
+    <!-- Table of Contents Sidebar -->
+    <aside class="sidebar toc-sidebar" id="tocSidebar">
+        <div class="sidebar-header">
+            <h2>Table of Contents</h2>
+            <button class="close-btn" id="closeTocBtn" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="toc-content" id="tocContent">
+            <!-- TOC will be populated by JavaScript -->
+        </nav>
+    </aside>
+
+    <!-- Settings Sidebar -->
+    <aside class="sidebar settings-sidebar" id="settingsSidebar">
+        <div class="sidebar-header">
+            <h2>Settings</h2>
+            <button class="close-btn" id="closeSettingsBtn" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="settings-content">
+            <!-- Theme Settings -->
+            <section class="settings-section">
+                <h3>Theme</h3>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="theme" value="system" id="themeSystem">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">System</div>
+                            <div class="label-description">Follow system preference</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="theme" value="light" id="themeLight">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">Light</div>
+                            <div class="label-description">Light theme</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="theme" value="dark" id="themeDark">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">Dark</div>
+                            <div class="label-description">Dark theme</div>
+                        </div>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Font Settings -->
+            <section class="settings-section">
+                <h3>Font</h3>
+                <div id="fontOptions">
+                    <!-- Font options will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Font Size Settings -->
+            <section class="settings-section">
+                <h3>Font Size</h3>
+                <div id="fontSizeOptions">
+                    <!-- Font size options will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Line Height Settings -->
+            <section class="settings-section">
+                <h3>Line Height</h3>
+                <div id="lineHeightOptions">
+                    <!-- Line height options will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Text Alignment Settings -->
+            <section class="settings-section">
+                <h3>Text Alignment</h3>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="alignment" value="justify" id="alignJustify">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">Justify</div>
+                            <div class="label-description">Even text on both sides</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="alignment" value="start" id="alignStart">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">Left</div>
+                            <div class="label-description">Align text to the left</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="alignment" value="center" id="alignCenter">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">Center</div>
+                            <div class="label-description">Center aligned text</div>
+                        </div>
+                    </label>
+                </div>
+                <div class="setting-option">
+                    <label class="radio-label">
+                        <input type="radio" name="alignment" value="end" id="alignEnd">
+                        <span class="radio-custom"></span>
+                        <div class="label-content">
+                            <div class="label-title">Right</div>
+                            <div class="label-description">Align text to the right</div>
+                        </div>
+                    </label>
+                </div>
+            </section>
+        </div>
+    </aside>
+
+    <!-- Backdrop -->
+    <div class="backdrop" id="backdrop"></div>
+
+    <script src="scripts/fonts.js"></script>
+    <script src="scripts/fontsize.js"></script>
+    <script src="scripts/lineheight.js"></script>
+    <script src="scripts/data.js"></script>
+    <script src="scripts/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/go.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+
+</html>
