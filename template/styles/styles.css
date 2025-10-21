@@ -101,7 +101,7 @@ body {
 }
 
 .reading-area {
-    max-width: 800px;
+    max-width: 1200px;
     width: 100%;
     padding: 0 3rem;
     font-size: var(--reading-font-size);
@@ -150,7 +150,13 @@ body {
     line-height: 1.5;
 }
 
-
+.reading-area img {
+    max-width: 100%;
+    height: auto;
+    background-color: #ffffff;
+    border-radius: 2px;
+    box-shadow: 0 2px 4
+}
 
 /* List Styles - Optimized for reading */
 .reading-area ul,

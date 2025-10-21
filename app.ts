@@ -167,6 +167,21 @@ async function build(): Promise<void> {
     const dataJSContent = generateDataJS(bookData);
     await fs.writeFile(path.join(BUILD_PATH, 'scripts', 'data.js'), dataJSContent);
 
+    // Copy folders from md directory to build directory (e.g., images folder)
+    console.log('Copying folders from md directory...');
+    const mdItems = await fs.readdir(MD_PATH);
+    for (const item of mdItems) {
+      const itemPath = path.join(MD_PATH, item);
+      const itemStat = await fs.stat(itemPath);
+      
+      // If it's a directory, copy it to build directory
+      if (itemStat.isDirectory()) {
+        const destPath = path.join(BUILD_PATH, item);
+        await fs.copy(itemPath, destPath);
+        console.log(`   Copied folder: ${item}/`);
+      }
+    }
+
     // Process each chapter
     console.log('Processing chapters...');
     for (let i = 0; i < bookData.chapters.length; i++) {
