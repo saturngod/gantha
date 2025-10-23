@@ -319,9 +319,54 @@ function attachEventListeners() {
     // Font radio buttons are now attached dynamically in generateFontOptions()
 }
 
+// Auto-hide header and navigation buttons on scroll
+let lastScrollTop = 0;
+let scrollTimeout;
+const header = document.querySelector('.header');
+const navButtons = document.querySelectorAll('.nav-btn');
+const scrollThreshold = 5; // Minimum scroll amount to trigger hide/show
+
+function handleScroll() {
+    // Clear any existing timeout
+    clearTimeout(scrollTimeout);
+    
+    // Debounce the scroll event
+    scrollTimeout = setTimeout(() => {
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Don't hide header/buttons if we're at the top of the page
+        if (currentScroll <= 10) {
+            header.classList.remove('header-hidden');
+            navButtons.forEach(btn => btn.classList.remove('nav-hidden'));
+            lastScrollTop = currentScroll;
+            return;
+        }
+        
+        // Check scroll direction
+        if (Math.abs(currentScroll - lastScrollTop) < scrollThreshold) {
+            return; // Not enough movement
+        }
+        
+        if (currentScroll > lastScrollTop) {
+            // Scrolling down - hide header and nav buttons
+            header.classList.add('header-hidden');
+            navButtons.forEach(btn => btn.classList.add('nav-hidden'));
+        } else {
+            // Scrolling up - show header and nav buttons
+            header.classList.remove('header-hidden');
+            navButtons.forEach(btn => btn.classList.remove('nav-hidden'));
+        }
+        
+        lastScrollTop = currentScroll;
+    }, 10);
+}
+
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
     init();
 }
+
+// Attach scroll listener for auto-hide header
+window.addEventListener('scroll', handleScroll, { passive: true });

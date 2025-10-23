@@ -59,7 +59,12 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    transform: translateY(0);
+}
+
+.header.header-hidden {
+    transform: translateY(-100%);
 }
 
 .book-title {
@@ -241,10 +246,16 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: opacity 0.3s ease, transform 0.2s ease, background-color 0.2s ease;
     box-shadow: 0 2px 8px var(--shadow);
     z-index: 50;
     text-decoration: none;
+    opacity: 1;
+}
+
+.nav-btn.nav-hidden {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .nav-btn:hover {
