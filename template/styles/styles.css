@@ -498,17 +498,22 @@ body {
     }
 
     .nav-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.25rem;
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+        opacity: 0.6;
+    }
+
+    .nav-btn:hover {
+        opacity: 1;
     }
 
     .nav-btn-prev {
-        left: 0.5rem;
+        left: 0.25rem;
     }
 
     .nav-btn-next {
-        right: 0.5rem;
+        right: 0.25rem;
     }
 }
 
@@ -533,6 +538,21 @@ body {
 
     .reading-area {
         padding: 0 0.5rem;
+    }
+
+    .nav-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.875rem;
+        opacity: 0.5;
+    }
+
+    .nav-btn-prev {
+        left: 0.125rem;
+    }
+
+    .nav-btn-next {
+        right: 0.125rem;
     }
 }
 /* Text Alignment Classes */
