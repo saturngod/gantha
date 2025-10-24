@@ -1,4 +1,4 @@
-# Gantha
+# Gantha (ဂန္ထ)
 
 Just Another Markdown to Website builder designed for books, especially Myanmar content.
 
