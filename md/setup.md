@@ -170,6 +170,19 @@ When writing in Myanmar language:
 - Clear browser cache and rebuild
 - Check CSS syntax in custom stylesheets
 
+
+## Mermaid Diagram
+
+Supporting mermaid diagram from markdown.
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+
 ## Next Steps
 
 After setup, you can:

@@ -350,7 +350,7 @@ function handleScroll() {
         if (currentScroll > lastScrollTop) {
             // Scrolling down - hide header and nav buttons
             header.classList.add('header-hidden');
-            navButtons.forEach(btn => btn.classList.add('nav-hidden'));z
+            navButtons.forEach(btn => btn.classList.add('nav-hidden'));
         } else {
             // Scrolling up - show header and nav buttons
             header.classList.remove('header-hidden');

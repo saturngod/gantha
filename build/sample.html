@@ -276,6 +276,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
     <!-- and it's easy to individually load additional languages -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/go.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.12.0/dist/mermaid.min.js"></script>
+    <script>
+        // Convert all language-mermaid code blocks to mermaid class
+        document.querySelectorAll('code.language-mermaid').forEach(code => {
+            const pre = code.parentElement;
+            pre.classList.add('mermaid');
+            // Remove the code wrapper if needed
+            pre.innerHTML = code.textContent;
+        });
+    </script>
     <script>hljs.highlightAll();</script>
 </body>
 
