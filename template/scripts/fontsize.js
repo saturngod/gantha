@@ -1,49 +1,49 @@
 // Font size management
 const fontSizes = [
-    { name: 'Small', size: '1rem' },
-    { name: 'Normal', size: '1.2rem' },
-    { name: 'Big', size: '1.5rem' },
-    { name: 'Extra Big', size: '2rem' }
+  { name: "Small", size: "0.8rem" },
+  { name: "Normal", size: "1rem" },
+  { name: "Big", size: "1.5rem" },
+  { name: "Extra Big", size: "2rem" },
 ];
 
-let currentFontSize = localStorage.getItem('fontSize') || '1.2rem';
+let currentFontSize = localStorage.getItem("fontSize") || "1rem";
 
 // Apply saved font size on page load
 function applyFontSize(size) {
-    // Apply font size to reading area
-    const readingArea = document.querySelector('.reading-area');
-    if (readingArea) {
-        readingArea.style.fontSize = size;
-    }
+  // Apply font size to reading area
+  const readingArea = document.querySelector(".reading-area");
+  if (readingArea) {
+    readingArea.style.fontSize = size;
+  }
 
-    currentFontSize = size;
-    localStorage.setItem('fontSize', size);
+  currentFontSize = size;
+  localStorage.setItem("fontSize", size);
 
-    // Update radio button states
-    const radios = document.querySelectorAll('input[name="fontSize"]');
-    radios.forEach(radio => {
-        radio.checked = radio.value === size;
-    });
+  // Update radio button states
+  const radios = document.querySelectorAll('input[name="fontSize"]');
+  radios.forEach((radio) => {
+    radio.checked = radio.value === size;
+  });
 }
 
 // Initialize font size options
 function initializeFontSizes() {
-    const fontOptionsContainer = document.getElementById('fontSizeOptions');
+  const fontOptionsContainer = document.getElementById("fontSizeOptions");
 
-    if (!fontOptionsContainer) {
-        return;
-    }
+  if (!fontOptionsContainer) {
+    return;
+  }
 
-    fontOptionsContainer.innerHTML = '';
+  fontOptionsContainer.innerHTML = "";
 
-    fontSizes.forEach(font => {
-        const optionDiv = document.createElement('div');
-        optionDiv.className = 'setting-option';
+  fontSizes.forEach((font) => {
+    const optionDiv = document.createElement("div");
+    optionDiv.className = "setting-option";
 
-        optionDiv.innerHTML = `
+    optionDiv.innerHTML = `
             <label class="radio-label">
                 <input type="radio" name="fontSize" value="${font.size}"
-                       ${font.size === currentFontSize ? 'checked' : ''}>
+                       ${font.size === currentFontSize ? "checked" : ""}>
                 <span class="radio-custom"></span>
                 <div class="label-content">
                     <div class="label-title">${font.name}</div>
@@ -52,37 +52,37 @@ function initializeFontSizes() {
             </label>
         `;
 
-        fontOptionsContainer.appendChild(optionDiv);
+    fontOptionsContainer.appendChild(optionDiv);
+  });
+
+  // Add event listeners
+  const radios = document.querySelectorAll('input[name="fontSize"]');
+
+  radios.forEach((radio) => {
+    radio.addEventListener("change", (e) => {
+      if (e.target.checked) {
+        applyFontSize(e.target.value);
+      }
     });
+  });
 
-    // Add event listeners
-    const radios = document.querySelectorAll('input[name="fontSize"]');
-
-    radios.forEach((radio) => {
-        radio.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                applyFontSize(e.target.value);
-            }
-        });
-    });
-
-    // Apply current font size
-    applyFontSize(currentFontSize);
+  // Apply current font size
+  applyFontSize(currentFontSize);
 }
 
 // Initialize when DOM is ready
 function initFontSize() {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeFontSizes);
-    } else {
-        initializeFontSizes();
-    }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeFontSizes);
+  } else {
+    initializeFontSizes();
+  }
 }
 
 // Export for potential external use
 window.fontSizeManager = {
-    applyFontSize,
-    getCurrentFontSize: () => currentFontSize,
-    getAvailableSizes: () => fontSizes,
-    initializeFontSizes
+  applyFontSize,
+  getCurrentFontSize: () => currentFontSize,
+  getAvailableSizes: () => fontSizes,
+  initializeFontSizes,
 };

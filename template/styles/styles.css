@@ -35,14 +35,16 @@ body.theme-dark {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
     overflow-x: hidden;
 }
-
-
 
 .myanmar-text {
     font-size: 1em;
@@ -59,7 +61,10 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        background-color 0.3s ease,
+        border-color 0.3s ease;
     transform: translateY(0);
 }
 
@@ -82,7 +87,9 @@ body {
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 4px;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -111,6 +118,11 @@ body {
     padding: 0 3rem;
     font-size: var(--reading-font-size);
     line-height: 2rem;
+}
+
+.reading-area p {
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
 }
 
 .reading-area h1 {
@@ -160,7 +172,7 @@ body {
     height: auto;
     background-color: #ffffff;
     border-radius: 2px;
-    box-shadow: 0 2px 4
+    box-shadow: 0 2px 4;
 }
 
 /* List Styles - Optimized for reading */
@@ -230,6 +242,12 @@ body {
     text-align: end;
 }
 
+.reading-area code {
+    background-color: #eee;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
 /* Navigation Buttons */
 .nav-btn {
     position: fixed;
@@ -246,7 +264,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.3s ease, transform 0.2s ease, background-color 0.2s ease;
+    transition:
+        opacity 0.3s ease,
+        transform 0.2s ease,
+        background-color 0.2s ease;
     box-shadow: 0 2px 8px var(--shadow);
     z-index: 50;
     text-decoration: none;
@@ -286,7 +307,9 @@ body {
     background-color: var(--bg-sidebar);
     box-shadow: 0 0 20px var(--shadow);
     z-index: 1000;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        background-color 0.3s ease;
     display: flex;
     flex-direction: column;
 }
@@ -429,11 +452,11 @@ body {
     margin-top: 2px;
 }
 
-.radio-label input[type="radio"]:checked~.radio-custom {
+.radio-label input[type="radio"]:checked ~ .radio-custom {
     border-color: var(--text-primary);
 }
 
-.radio-label input[type="radio"]:checked~.radio-custom::after {
+.radio-label input[type="radio"]:checked ~ .radio-custom::after {
     content: "";
     position: absolute;
     top: 50%;
@@ -471,7 +494,9 @@ body {
     z-index: 900;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
 }
 
 .backdrop.active {
@@ -566,6 +591,132 @@ body {
         right: 0.125rem;
     }
 }
+/* Table Styles */
+.reading-area table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 0.95em;
+    background-color: var(--bg-primary);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+.reading-area table thead {
+    background-color: var(--bg-secondary);
+}
+
+.reading-area table th {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border-color);
+    background-color: #808080;
+    color: #ffffff;
+}
+
+.reading-area table td {
+    padding: 0.875rem 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    transition: background-color 0.2s ease;
+}
+
+.reading-area table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.reading-area table tbody tr:hover {
+    background-color: var(--bg-hover);
+}
+
+.reading-area table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Dark theme adjustments for table headers */
+body.theme-dark .reading-area table th {
+    background-color: #505050;
+    color: #ffffff;
+}
+
+/* Responsive table for mobile */
+@media (max-width: 768px) {
+    .reading-area table {
+        font-size: 0.9em;
+    }
+
+    .reading-area table th,
+    .reading-area table td {
+        padding: 0.75rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .reading-area table {
+        font-size: 0.85em;
+        margin: 1.5rem 0;
+    }
+
+    .reading-area table th,
+    .reading-area table td {
+        padding: 0.625rem 0.875rem;
+    }
+}
+
+/* Pre Code Block Styles */
+.reading-area pre > code {
+    background-clip: border-box;
+    background-color: rgb(243, 243, 243);
+    background-image: none;
+    background-origin: padding-box;
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-repeat: repeat;
+    background-size: auto;
+    box-sizing: border-box;
+    color: rgb(68, 68, 68);
+    display: block;
+    font-family: monospace;
+    font-size: 16px;
+    line-height: 40px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    overflow-x: auto;
+    padding-bottom: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 16px;
+}
+
+/* Dark theme support for code blocks */
+body.theme-dark .reading-area pre > code {
+    background-color: rgb(68, 68, 68);
+    color: rgb(243, 243, 243);
+}
+
+/* Responsive code blocks for mobile */
+@media (max-width: 768px) {
+    .reading-area pre > code {
+        font-size: 14px;
+        line-height: 32px;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .reading-area pre > code {
+        font-size: 12px;
+        line-height: 28px;
+        padding: 10px;
+    }
+}
+
 /* Text Alignment Classes */
 .reading-area.align-justify p {
     text-align: justify;
