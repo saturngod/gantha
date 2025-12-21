@@ -452,11 +452,11 @@ body {
     margin-top: 2px;
 }
 
-.radio-label input[type="radio"]:checked ~ .radio-custom {
+.radio-label input[type="radio"]:checked~.radio-custom {
     border-color: var(--text-primary);
 }
 
-.radio-label input[type="radio"]:checked ~ .radio-custom::after {
+.radio-label input[type="radio"]:checked~.radio-custom::after {
     content: "";
     position: absolute;
     top: 50%;
@@ -591,15 +591,18 @@ body {
         right: 0.125rem;
     }
 }
+
 /* Table Styles */
 .reading-area table {
+    display: block;
     width: 100%;
     border-collapse: collapse;
     margin: 2rem 0;
     font-size: 0.95em;
     background-color: var(--bg-primary);
     border-radius: 8px;
-    overflow: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     box-shadow: 0 2px 8px var(--shadow);
 }
 
@@ -668,7 +671,7 @@ body.theme-dark .reading-area table th {
 }
 
 /* Pre Code Block Styles */
-.reading-area pre > code {
+.reading-area pre>code {
     background-clip: border-box;
     background-color: rgb(243, 243, 243);
     background-image: none;
@@ -695,14 +698,14 @@ body.theme-dark .reading-area table th {
 }
 
 /* Dark theme support for code blocks */
-body.theme-dark .reading-area pre > code {
+body.theme-dark .reading-area pre>code {
     background-color: rgb(68, 68, 68);
     color: rgb(243, 243, 243);
 }
 
 /* Responsive code blocks for mobile */
 @media (max-width: 768px) {
-    .reading-area pre > code {
+    .reading-area pre>code {
         font-size: 14px;
         line-height: 32px;
         padding: 12px;
@@ -710,7 +713,7 @@ body.theme-dark .reading-area pre > code {
 }
 
 @media (max-width: 480px) {
-    .reading-area pre > code {
+    .reading-area pre>code {
         font-size: 12px;
         line-height: 28px;
         padding: 10px;
