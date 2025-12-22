@@ -18,6 +18,9 @@
             <i class="fas fa-bars"></i>
         </button>
         <h1 class="book-title">Gantha</h1>
+        <button class="icon-btn search-btn" id="searchBtn" aria-label="Search">
+            <i class="fas fa-search"></i>
+        </button>
         <button class="icon-btn settings-btn" id="settingsBtn" aria-label="Settings">
             <i class="fas fa-cog"></i>
         </button>
@@ -90,6 +93,23 @@
         <nav class="toc-content" id="tocContent">
             <!-- TOC will be populated by JavaScript -->
         </nav>
+    </aside>
+
+    <!-- Search Sidebar -->
+    <aside class="sidebar search-sidebar" id="searchSidebar">
+        <div class="sidebar-header">
+            <h2>Search</h2>
+            <button class="close-btn" id="closeSearchBtn" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="search-content">
+            <div class="search-input-wrapper">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search..." autocomplete="off">
+            </div>
+            <div class="search-loading" id="searchLoading">Loading search index...</div>
+            <div class="search-results" id="searchResults"></div>
+        </div>
     </aside>
 
     <!-- Settings Sidebar -->
@@ -215,6 +235,8 @@
     <script src="scripts/lineheight.js"></script>
     <script src="scripts/data.js"></script>
     <script src="scripts/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.5/elasticlunr.min.js"></script>
+    <script src="scripts/search.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
     <!-- and it's easy to individually load additional languages -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/go.min.js"></script>

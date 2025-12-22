@@ -295,6 +295,7 @@ function attachEventListeners() {
     backdrop.addEventListener('click', () => {
         closeTOC();
         closeSettings();
+        if (window.searchManager) window.searchManager.closeSearch();
     });
 
     // Keyboard navigation
@@ -302,6 +303,7 @@ function attachEventListeners() {
         if (e.key === 'Escape') {
             closeTOC();
             closeSettings();
+            if (window.searchManager) window.searchManager.closeSearch();
         }
     });
 

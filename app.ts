@@ -97,6 +97,118 @@ const bookData = {
 };`;
 }
 
+// Strip HTML tags from content to get plain text
+function stripHtml(html: string): string {
+  return html
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '') // Remove scripts
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '') // Remove styles
+    .replace(/<[^>]+>/g, ' ') // Remove HTML tags
+    .replace(/\s+/g, ' ') // Normalize whitespace
+    .trim();
+}
+
+// Simple elasticlunr-like index builder for Node.js
+// We'll build the index structure manually since elasticlunr is a browser library
+interface SearchDocument {
+  id: string;
+  title: string;
+  body: string;
+  file: string;
+}
+
+interface SearchDocsMap {
+  [id: string]: { title: string; body: string; file: string };
+}
+
+// Myanmar syllable breaking patterns
+const myConsonant = "\u1000-\u1021"; // "က-အ"
+const enChar = "a-zA-Z0-9";
+const otherChar = "\u1023\u1024\u1025\u1026\u1027\u1029\u102a\u103f\u104c\u104d\u104f\u1040-\u1049\u104a\u104b!-/:-@\\[-`\\{-~\\s";
+const ssSymbol = "\u1039";
+const aThat = "\u103a";
+
+// Myanmar syllable break pattern
+const BREAK_PATTERN = new RegExp("((?!" + ssSymbol + ")[" + myConsonant + "](?![" + aThat + ssSymbol + "])" + "|[" + enChar + otherChar + "])", "mg");
+
+// Segment Myanmar text into syllables
+function segmentMyanmar(text: string): string[] {
+  const outArray = text.replace(BREAK_PATTERN, "𝕊$1").split('𝕊');
+  if (outArray.length > 0) {
+    outArray.shift();
+  }
+  return outArray;
+}
+
+// Custom tokenizer for Myanmar text
+function myanmarTokenizer(str: string): string[] {
+  if (!str) return [];
+  
+  const text = str.toString().toLowerCase().trim();
+  if (!text) return [];
+  
+  const segments = segmentMyanmar(text);
+  return segments
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+}
+
+// Generate search index from book chapters
+async function generateSearchIndex(bookData: BookData): Promise<{ indexData: object; docsData: SearchDocsMap }> {
+  // Import elasticlunr
+  const elasticlunr = require('elasticlunr');
+  
+  // Override the tokenizer with Myanmar-aware tokenizer
+  elasticlunr.tokenizer = myanmarTokenizer;
+  
+  // Create index
+  const index = elasticlunr(function(this: any) {
+    this.addField('title');
+    this.addField('body');
+    this.setRef('id');
+    this.saveDocument(false);
+    
+    // Clear pipeline - default trimmer/stemmer don't work for Myanmar
+    this.pipeline.reset();
+  });
+  
+  const docsMap: SearchDocsMap = {};
+
+  for (let i = 0; i < bookData.chapters.length; i++) {
+    const chapter = bookData.chapters[i];
+    const markdownPath = path.join(MD_PATH, chapter.file);
+    
+    try {
+      const markdownContent = await fs.readFile(markdownPath, 'utf-8');
+      const htmlContent = convertMarkdownToHTML(markdownContent);
+      const plainText = stripHtml(htmlContent);
+      
+      const outputFilename = i === 0 ? 'index.html' : chapter.file.replace(/\.md$/, '.html');
+      
+      // Add document to index
+      index.addDoc({
+        id: chapter.id,
+        title: chapter.title,
+        body: plainText
+      });
+      
+      // Store docs for result display (with truncated body for smaller file size)
+      docsMap[chapter.id] = {
+        title: chapter.title,
+        body: plainText.substring(0, 500),
+        file: outputFilename
+      };
+    } catch (error) {
+      console.warn(`   Warning: Could not process ${chapter.file} for search index`);
+    }
+  }
+  
+  // Serialize the index to JSON
+  return {
+    indexData: index.toJSON(),
+    docsData: docsMap
+  };
+}
+
 // Main build function
 async function build(): Promise<void> {
   try {
@@ -225,6 +337,19 @@ async function build(): Promise<void> {
 
       console.log(`   Generated: ${outputFilename}`);
     }
+
+    // Generate search index
+    console.log('Generating search index...');
+    const { indexData, docsData } = await generateSearchIndex(bookData);
+    await fs.writeFile(
+      path.join(BUILD_PATH, 'search-index.json'),
+      JSON.stringify(indexData)
+    );
+    await fs.writeFile(
+      path.join(BUILD_PATH, 'search-docs.json'),
+      JSON.stringify(docsData)
+    );
+    console.log('   Generated: search-index.json, search-docs.json');
 
     console.log('Build completed successfully!');
     console.log(`Build output is available in: ${BUILD_PATH}`);

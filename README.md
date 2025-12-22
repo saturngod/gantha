@@ -145,6 +145,7 @@ Edit `toc.json` to configure your book structure:
 - **fs-extra**: Enhanced file system operations
 - **clean-css**: CSS minification
 - **terser**: JavaScript minification
+- **elasticlunr**: Lightweight full-text search engine
 
 ## Development Dependencies
 
@@ -159,6 +160,49 @@ MIT License
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Search
+
+Gantha includes built-in full-text search powered by [Elasticlunr.js](http://elasticlunr.com/). The search index is automatically generated during `bun run build`.
+
+### Myanmar Text Support
+
+Elasticlunr uses English tokenization by default, which doesn't work for Myanmar script (no spaces between words). Gantha includes a custom **Myanmar syllable tokenizer** that breaks text into searchable syllables using Unicode-aware regex patterns:
+
+```javascript
+// Myanmar consonants: က-အ
+const myConsonant = "\u1000-\u1021";
+const ssSymbol = "\u1039";  // subscript symbol
+const aThat = "\u103a";     // a-That character
+
+// Syllable break pattern - splits on consonants not after subscript 
+// AND not followed by a-That or subscript
+const BREAK_PATTERN = new RegExp(
+  "((?!" + ssSymbol + ")[" + myConsonant + "](?![" + aThat + ssSymbol + "])|[a-zA-Z0-9...])", 
+  "mg"
+);
+```
+
+This tokenizes text like `"ဖန့်ရှင့်"` into syllables `["ဖန့်", "ရှင့်"]`, making Myanmar content fully searchable.
+
+### How It Works
+
+1. **Build time**: `app.ts` extracts text from each markdown file, tokenizes it into syllables using the Myanmar tokenizer, and builds the Elasticlunr index → saves to `search-index.json`
+2. **Runtime**: Browser loads the pre-built index and registers the same Myanmar tokenizer for search queries
+3. **Search**: User queries are tokenized into syllables and matched against the index
+
+### Usage
+
+- Click the 🔍 icon in the header or press **Cmd/Ctrl+K** to open search
+- Type in English or Myanmar to find matching chapters
+- Click a result to navigate to that page
+
+> **Note**: Search requires an HTTP server to work (CORS restriction). Use `npx serve build` or similar to test locally.
+
+## Credits
+
+- **[sylbreak](https://github.com/ye-kyaw-thu/sylbreak)** - Myanmar syllable breaking algorithm by Ye Kyaw Thu
+- **[Elasticlunr.js](http://elasticlunr.com/)** - Lightweight full-text search engine
 
 ## Keywords
 
