@@ -242,10 +242,17 @@ body {
     text-align: end;
 }
 
-.reading-area code {
-    background-color: #eee;
-    padding-left: 4px;
-    padding-right: 4px;
+.reading-area :not(pre)>code {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+body.theme-dark .reading-area :not(pre)>code {
+    background-color: #3d3d3d;
+    color: #e0e0e0;
 }
 
 /* Navigation Buttons */
@@ -594,7 +601,6 @@ body {
 
 /* Table Styles */
 .reading-area table {
-    display: block;
     width: 100%;
     border-collapse: collapse;
     margin: 2rem 0;
@@ -608,6 +614,14 @@ body {
 
 .reading-area table thead {
     background-color: var(--bg-secondary);
+}
+
+.reading-area table thead th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.reading-area table thead th:last-child {
+    border-top-right-radius: 8px;
 }
 
 .reading-area table th {
@@ -673,7 +687,6 @@ body.theme-dark .reading-area table th {
 /* Pre Code Block Styles */
 .reading-area pre>code {
     background-clip: border-box;
-    background-color: rgb(243, 243, 243);
     background-image: none;
     background-origin: padding-box;
     background-position-x: 0%;
@@ -681,7 +694,6 @@ body.theme-dark .reading-area table th {
     background-repeat: repeat;
     background-size: auto;
     box-sizing: border-box;
-    color: rgb(68, 68, 68);
     display: block;
     font-family: monospace;
     font-size: 16px;
@@ -697,8 +709,13 @@ body.theme-dark .reading-area table th {
     padding-top: 16px;
 }
 
+.reading-area pre>code:not(.hljs) {
+    background-color: rgb(243, 243, 243);
+    color: rgb(68, 68, 68);
+}
+
 /* Dark theme support for code blocks */
-body.theme-dark .reading-area pre>code {
+body.theme-dark .reading-area pre>code:not(.hljs) {
     background-color: rgb(68, 68, 68);
     color: rgb(243, 243, 243);
 }

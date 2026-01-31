@@ -19,6 +19,11 @@ const themeSystem = document.getElementById('themeSystem');
 const themeLight = document.getElementById('themeLight');
 const themeDark = document.getElementById('themeDark');
 
+// Highlight.js Theme Element
+const highlightTheme = document.getElementById('highlightTheme');
+const lightThemeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css';
+const darkThemeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css';
+
 // Alignment Radio Buttons
 const alignJustify = document.getElementById('alignJustify');
 const alignStart = document.getElementById('alignStart');
@@ -125,9 +130,11 @@ function applyTheme(theme) {
     } else if (theme === 'light') {
         themeLight.checked = true;
         document.body.classList.remove('theme-dark');
+        if (highlightTheme) highlightTheme.href = lightThemeUrl;
     } else if (theme === 'dark') {
         themeDark.checked = true;
         document.body.classList.add('theme-dark');
+        if (highlightTheme) highlightTheme.href = darkThemeUrl;
     }
 
     localStorage.setItem('theme', theme);
@@ -139,8 +146,10 @@ function applySystemTheme() {
 
     if (prefersDark) {
         document.body.classList.add('theme-dark');
+        if (highlightTheme) highlightTheme.href = darkThemeUrl;
     } else {
         document.body.classList.remove('theme-dark');
+        if (highlightTheme) highlightTheme.href = lightThemeUrl;
     }
 }
 
@@ -157,7 +166,7 @@ function applyFont(fontId) {
 
     // Get the reading area element
     const readingArea = document.querySelector('.reading-area');
-    
+
     if (!readingArea) {
         console.warn('Reading area not found');
         return;
@@ -195,7 +204,7 @@ function applyAlignment(alignment) {
 
     // Get the reading area element
     const readingArea = document.querySelector('.reading-area');
-    
+
     if (!readingArea) {
         console.warn('Reading area not found');
         return;
@@ -331,11 +340,11 @@ const scrollThreshold = 5; // Minimum scroll amount to trigger hide/show
 function handleScroll() {
     // Clear any existing timeout
     clearTimeout(scrollTimeout);
-    
+
     // Debounce the scroll event
     scrollTimeout = setTimeout(() => {
         const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-        
+
         // Don't hide header/buttons if we're at the top of the page
         if (currentScroll <= 10) {
             header.classList.remove('header-hidden');
@@ -343,12 +352,12 @@ function handleScroll() {
             lastScrollTop = currentScroll;
             return;
         }
-        
+
         // Check scroll direction
         if (Math.abs(currentScroll - lastScrollTop) < scrollThreshold) {
             return; // Not enough movement
         }
-        
+
         if (currentScroll > lastScrollTop) {
             // Scrolling down - hide header and nav buttons
             header.classList.add('header-hidden');
@@ -358,7 +367,7 @@ function handleScroll() {
             header.classList.remove('header-hidden');
             navButtons.forEach(btn => btn.classList.remove('nav-hidden'));
         }
-        
+
         lastScrollTop = currentScroll;
     }, 10);
 }
