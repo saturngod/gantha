@@ -25,6 +25,9 @@
         <button class="icon-btn settings-btn" id="settingsBtn" aria-label="Settings">
             <i class="fas fa-cog"></i>
         </button>
+        <button class="icon-btn keyboard-btn" id="keyboardBtn" aria-label="Keyboard Shortcuts" title="Keyboard Shortcuts (?)">
+            <i class="fas fa-keyboard"></i>
+        </button>
     </header>
 
     <!-- Main Content -->
@@ -193,6 +196,60 @@
 
     <!-- Backdrop -->
     <div class="backdrop" id="backdrop"></div>
+
+    <!-- Keyboard Shortcuts Card -->
+    <div class="keyboard-shortcuts-card" id="keyboardShortcutsCard">
+        <div class="shortcuts-header">
+            <h3>Keyboard Shortcuts</h3>
+            <button class="close-btn" id="closeShortcutsBtn" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="shortcuts-content">
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <kbd>←</kbd> or <kbd>P</kbd>
+                </div>
+                <div class="shortcut-description">Previous Chapter</div>
+            </div>
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <kbd>→</kbd> or <kbd>N</kbd>
+                </div>
+                <div class="shortcut-description">Next Chapter</div>
+            </div>
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <kbd>M</kbd>
+                </div>
+                <div class="shortcut-description">Toggle Menu</div>
+            </div>
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <kbd>S</kbd>
+                </div>
+                <div class="shortcut-description">Toggle Settings</div>
+            </div>
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <kbd>/</kbd>
+                </div>
+                <div class="shortcut-description">Search</div>
+            </div>
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <kbd>?</kbd>
+                </div>
+                <div class="shortcut-description">Show/Hide Shortcuts</div>
+            </div>
+            <div class="shortcut-item">
+                <div class="shortcut-keys">
+                    <kbd>Esc</kbd>
+                </div>
+                <div class="shortcut-description">Close Sidebars</div>
+            </div>
+        </div>
+    </div>
 
     <script src="scripts/fonts.js"></script>
     <script src="scripts/fontsize.js"></script>
