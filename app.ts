@@ -5,16 +5,89 @@ import CleanCSS from 'clean-css';
 import { minify } from 'terser';
 
 // Types
-interface Chapter {
-  id: string;
-  title: string;
-  subtitle: string;
-  file: string;
-}
+import { Chapter, BookData, Plugin, PluginContext } from './types';
 
-interface BookData {
-  title: string;
-  chapters: Chapter[];
+class PluginManager {
+  private hooks: {
+    beforeBuild: (() => void | Promise<void>)[];
+    afterBuild: (() => void | Promise<void>)[];
+    processMarkdown: ((markdown: string) => string | Promise<string>)[];
+    processHTML: ((html: string) => string | Promise<string>)[];
+  } = {
+      beforeBuild: [],
+      afterBuild: [],
+      processMarkdown: [],
+      processHTML: []
+    };
+
+  constructor(private bookData: BookData, private projectRoot: string) { }
+
+  async loadPlugins() {
+    if (!this.bookData.plugins || this.bookData.plugins.length === 0) {
+      return;
+    }
+
+    console.log('Loading plugins...');
+    for (const pluginName of this.bookData.plugins) {
+      try {
+        // Resolve plugin path - check local first, then node_modules
+        let pluginPath: string;
+        if (pluginName.startsWith('./') || pluginName.startsWith('../')) {
+          pluginPath = path.resolve(this.projectRoot, pluginName);
+        } else {
+          // Assume npm package
+          pluginPath = pluginName;
+        }
+
+        console.log(`   Loading plugin: ${pluginName}`);
+
+        // Dynamically import the plugin
+        // Note: In Bun/Node, dynamic import works for both ESM and CJS if configured right.
+        // We'll try standard import.
+        const pluginModule = await import(pluginPath);
+        const plugin = pluginModule.default || pluginModule;
+
+        if (plugin && typeof plugin.init === 'function') {
+          const context: PluginContext = {
+            on: (hook, callback) => {
+              if (this.hooks[hook]) {
+                // @ts-ignore
+                this.hooks[hook].push(callback);
+              } else {
+                console.warn(`   Warning: Plugin ${pluginName} tried to register unknown hook: ${hook}`);
+              }
+            },
+            bookData: this.bookData,
+            projectRoot: this.projectRoot
+          };
+
+          await plugin.init(context);
+          console.log(`   Plugin loaded: ${pluginName}`);
+        } else {
+          console.warn(`   Warning: Plugin ${pluginName} does not export an init function.`);
+        }
+      } catch (error) {
+        console.error(`   Error loading plugin ${pluginName}:`, error);
+      }
+    }
+  }
+
+  async runHook(hookName: 'beforeBuild' | 'afterBuild') {
+    if (this.hooks[hookName].length > 0) {
+      console.log(`   Running ${hookName} hooks...`);
+      for (const callback of this.hooks[hookName]) {
+        await callback();
+      }
+    }
+  }
+
+  async processContent(hookName: 'processMarkdown' | 'processHTML', content: string): Promise<string> {
+    let result = content;
+    for (const callback of this.hooks[hookName]) {
+      result = await callback(result);
+    }
+    return result;
+  }
 }
 
 // Configuration
@@ -142,10 +215,10 @@ function segmentMyanmar(text: string): string[] {
 // Custom tokenizer for Myanmar text
 function myanmarTokenizer(str: string): string[] {
   if (!str) return [];
-  
+
   const text = str.toString().toLowerCase().trim();
   if (!text) return [];
-  
+
   const segments = segmentMyanmar(text);
   return segments
     .map(s => s.trim())
@@ -156,41 +229,41 @@ function myanmarTokenizer(str: string): string[] {
 async function generateSearchIndex(bookData: BookData): Promise<{ indexData: object; docsData: SearchDocsMap }> {
   // Import elasticlunr
   const elasticlunr = require('elasticlunr');
-  
+
   // Override the tokenizer with Myanmar-aware tokenizer
   elasticlunr.tokenizer = myanmarTokenizer;
-  
+
   // Create index
-  const index = elasticlunr(function(this: any) {
+  const index = elasticlunr(function (this: any) {
     this.addField('title');
     this.addField('body');
     this.setRef('id');
     this.saveDocument(false);
-    
+
     // Clear pipeline - default trimmer/stemmer don't work for Myanmar
     this.pipeline.reset();
   });
-  
+
   const docsMap: SearchDocsMap = {};
 
   for (let i = 0; i < bookData.chapters.length; i++) {
     const chapter = bookData.chapters[i];
     const markdownPath = path.join(MD_PATH, chapter.file);
-    
+
     try {
       const markdownContent = await fs.readFile(markdownPath, 'utf-8');
       const htmlContent = convertMarkdownToHTML(markdownContent);
       const plainText = stripHtml(htmlContent);
-      
+
       const outputFilename = i === 0 ? 'index.html' : chapter.file.replace(/\.md$/, '.html');
-      
+
       // Add document to index
       index.addDoc({
         id: chapter.id,
         title: chapter.title,
         body: plainText
       });
-      
+
       // Store docs for result display (with truncated body for smaller file size)
       docsMap[chapter.id] = {
         title: chapter.title,
@@ -201,7 +274,7 @@ async function generateSearchIndex(bookData: BookData): Promise<{ indexData: obj
       console.warn(`   Warning: Could not process ${chapter.file} for search index`);
     }
   }
-  
+
   // Serialize the index to JSON
   return {
     indexData: index.toJSON(),
@@ -225,6 +298,13 @@ async function build(): Promise<void> {
     console.log('Reading table of contents...');
     const tocContent = await fs.readFile(TOC_PATH, 'utf-8');
     const bookData: BookData = JSON.parse(tocContent);
+
+    // Initialize Plugin Manager
+    const pluginManager = new PluginManager(bookData, PROJECT_ROOT);
+    await pluginManager.loadPlugins();
+
+    // Run beforeBuild hooks
+    await pluginManager.runHook('beforeBuild');
 
     // Read template HTML
     console.log('Reading template...');
@@ -285,7 +365,7 @@ async function build(): Promise<void> {
     for (const item of mdItems) {
       const itemPath = path.join(MD_PATH, item);
       const itemStat = await fs.stat(itemPath);
-      
+
       // If it's a directory, copy it to build directory
       if (itemStat.isDirectory()) {
         const destPath = path.join(BUILD_PATH, item);
@@ -303,8 +383,15 @@ async function build(): Promise<void> {
       console.log(`   Processing: ${chapter.title}`);
 
       // Read markdown content
-      const markdownContent = await fs.readFile(markdownPath, 'utf-8');
-      const htmlContent = convertMarkdownToHTML(markdownContent);
+      let markdownContent = await fs.readFile(markdownPath, 'utf-8');
+
+      // Hook: processMarkdown
+      markdownContent = await pluginManager.processContent('processMarkdown', markdownContent);
+
+      let htmlContent = convertMarkdownToHTML(markdownContent);
+
+      // Hook: processHTML
+      htmlContent = await pluginManager.processContent('processHTML', htmlContent);
 
       // Determine output filename - use same name as markdown but with .html extension
       // Special case: first chapter becomes index.html for convenience
@@ -316,11 +403,11 @@ async function build(): Promise<void> {
       let nextLink = '';
 
       if (i > 0) {
-        prevLink = i === 1 ? 'index.html' : bookData.chapters[i-1].file.replace(/\.md$/, '.html');
+        prevLink = i === 1 ? 'index.html' : bookData.chapters[i - 1].file.replace(/\.md$/, '.html');
       }
 
       if (i < bookData.chapters.length - 1) {
-        nextLink = bookData.chapters[i+1].file.replace(/\.md$/, '.html');
+        nextLink = bookData.chapters[i + 1].file.replace(/\.md$/, '.html');
       }
 
       // Prepare template replacements
@@ -350,6 +437,9 @@ async function build(): Promise<void> {
       JSON.stringify(docsData)
     );
     console.log('   Generated: search-index.json, search-docs.json');
+
+    // Run afterBuild hooks
+    await pluginManager.runHook('afterBuild');
 
     console.log('Build completed successfully!');
     console.log(`Build output is available in: ${BUILD_PATH}`);

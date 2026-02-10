@@ -25,5 +25,8 @@
             "subtitle": "Sample Content",
             "file": "sample.md"
         }
+    ],
+    "plugins": [
+        "gantha-pdf"
     ]
 }

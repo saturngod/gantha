@@ -1,0 +1,44 @@
+# Book Configuration File for PDF Conversion
+
+# Document Title
+title = "SAMPLE PDF"
+subtitle = "HELLO WORLD"
+
+# Document Author
+author = "Saturngod"
+
+# Cover Image (ensure this file exists in the directory)
+cover = "cover.png"
+
+# Header HTML - appears on top of every page
+# Use {PAGENO} for current page number, {nbpages} for total pages
+header = '<div style="display: flex; justify-content: space-between; color: #666; font-size: 10pt;"><span style="text-align: left;">{title}</span><span style="text-align: right;">{author}</span></div>'
+
+# Footer HTML - appears on bottom of every page
+# Use {PAGENO} for current page number, {nbpages} for total pages
+footer = '<div style="text-align: center; color: #666; font-size: 9pt;">{PAGENO} of {nbpg}</div>'
+
+# Page Margins (in mm)
+margin_top = 30
+margin_bottom = 30
+margin_left = 25
+margin_right = 25
+
+# Font Settings (Base size)
+font_size = 11
+font_family = "Myanmar MN"
+
+# Page Size: A4, Letter, etc.
+page_size = "A4"
+
+# Page Orientation: P (Portrait) or L (Landscape)
+orientation = "P"
+
+# Line height multiplier
+line_height = 1.8
+
+# Enable table of contents
+generate_toc = true
+
+# Enable index/bookmarks
+enable_bookmarks = true
