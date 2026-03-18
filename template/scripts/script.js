@@ -6,6 +6,7 @@ let currentAlignment = 'justify';
 // DOM Elements
 const menuBtn = document.getElementById('menuBtn');
 const settingsBtn = document.getElementById('settingsBtn');
+const keyboardBtn = document.getElementById('keyboardBtn');
 const tocSidebar = document.getElementById('tocSidebar');
 const settingsSidebar = document.getElementById('settingsSidebar');
 const closeTocBtn = document.getElementById('closeTocBtn');
@@ -13,6 +14,10 @@ const closeSettingsBtn = document.getElementById('closeSettingsBtn');
 const backdrop = document.getElementById('backdrop');
 const tocContent = document.getElementById('tocContent');
 const fontOptions = document.getElementById('fontOptions');
+const keyboardShortcutsCard = document.getElementById('keyboardShortcutsCard');
+const closeShortcutsBtn = document.getElementById('closeShortcutsBtn');
+const navBtnPrev = document.querySelector('.nav-btn-prev');
+const navBtnNext = document.querySelector('.nav-btn-next');
 
 // Theme Radio Buttons
 const themeSystem = document.getElementById('themeSystem');
@@ -290,11 +295,23 @@ function closeSettings() {
     backdrop.classList.remove('active');
 }
 
+// Toggle Keyboard Shortcuts Card
+function toggleKeyboardShortcuts() {
+    keyboardShortcutsCard.classList.toggle('active');
+}
+
+function closeKeyboardShortcuts() {
+    keyboardShortcutsCard.classList.remove('active');
+}
+
 // Attach Event Listeners
 function attachEventListeners() {
     // Menu and Settings buttons
     menuBtn.addEventListener('click', openTOC);
     settingsBtn.addEventListener('click', openSettings);
+    if (keyboardBtn) {
+        keyboardBtn.addEventListener('click', toggleKeyboardShortcuts);
+    }
 
     // Close buttons
     closeTocBtn.addEventListener('click', closeTOC);
@@ -307,12 +324,73 @@ function attachEventListeners() {
         if (window.searchManager) window.searchManager.closeSearch();
     });
 
+    // Close shortcuts button
+    if (closeShortcutsBtn) {
+        closeShortcutsBtn.addEventListener('click', closeKeyboardShortcuts);
+    }
+
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
+        // Check if user is typing in an input field
+        const isInputFocused = document.activeElement.tagName === 'INPUT' || 
+                               document.activeElement.tagName === 'TEXTAREA';
+        
         if (e.key === 'Escape') {
             closeTOC();
             closeSettings();
+            closeKeyboardShortcuts();
             if (window.searchManager) window.searchManager.closeSearch();
+        }
+        
+        // Don't trigger shortcuts if user is typing
+        if (isInputFocused) return;
+        
+        // Next chapter: Right arrow or 'n' key
+        if ((e.key === 'ArrowRight' || e.key === 'n' || e.key === 'N') && navBtnNext) {
+            const href = navBtnNext.getAttribute('href');
+            if (href && href !== '#') {
+                window.location.href = href;
+            }
+        }
+        
+        // Previous chapter: Left arrow or 'p' key
+        if ((e.key === 'ArrowLeft' || e.key === 'p' || e.key === 'P') && navBtnPrev) {
+            const href = navBtnPrev.getAttribute('href');
+            if (href && href !== '#') {
+                window.location.href = href;
+            }
+        }
+        
+        // Toggle menu: 'm' key
+        if (e.key === 'm' || e.key === 'M') {
+            if (tocSidebar.classList.contains('active')) {
+                closeTOC();
+            } else {
+                openTOC();
+            }
+        }
+        
+        // Toggle settings: 's' key
+        if (e.key === 's' || e.key === 'S') {
+            if (settingsSidebar.classList.contains('active')) {
+                closeSettings();
+            } else {
+                openSettings();
+            }
+        }
+        
+        // Search: '/' key
+        if (e.key === '/') {
+            e.preventDefault();
+            if (window.searchManager) {
+                window.searchManager.openSearch();
+            }
+        }
+        
+        // Show keyboard shortcuts: '?' key
+        if (e.key === '?') {
+            e.preventDefault();
+            toggleKeyboardShortcuts();
         }
     });
 

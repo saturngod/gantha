@@ -872,3 +872,129 @@ body.theme-dark .search-result-title mark {
 .search-error {
     color: #e74c3c;
 }
+
+/* Keyboard Shortcuts Card */
+.keyboard-shortcuts-card {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px var(--shadow);
+    width: 320px;
+    max-width: calc(100vw - 4rem);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    pointer-events: none;
+    transition: 
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.keyboard-shortcuts-card.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.shortcuts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.shortcuts-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.shortcuts-header .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: 
+        background-color 0.2s ease,
+        color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.shortcuts-header .close-btn:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.shortcuts-content {
+    padding: 1rem 1.5rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.shortcut-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    gap: 1rem;
+}
+
+.shortcut-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.shortcut-keys {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.shortcut-keys kbd {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-shadow: 0 1px 2px var(--shadow);
+    min-width: 1.5rem;
+    text-align: center;
+}
+
+.shortcut-description {
+    flex: 1;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    text-align: right;
+}
+
+/* Mobile responsiveness for shortcuts card */
+@media (max-width: 768px) {
+    .keyboard-shortcuts-card {
+        bottom: 1rem;
+        right: 1rem;
+        width: calc(100vw - 2rem);
+        max-width: 100%;
+    }
+    
+    .shortcuts-content {
+        max-height: 300px;
+    }
+}
