@@ -1,8 +1,10 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { marked } from 'marked';
+import katex from 'katex';
 import CleanCSS from 'clean-css';
 import { minify } from 'terser';
+import { transformFootnotes } from './markdown-footnotes';
 
 // Types
 import { Chapter, BookData, Plugin, PluginContext } from './types';
@@ -106,15 +108,175 @@ function replaceTemplatePlaceholders(template: string, replacements: Record<stri
   return result;
 }
 
-// Convert markdown to HTML
-function convertMarkdownToHTML(markdownContent: string): string {
-  // Configure marked for better Myanmar text support
-  marked.setOptions({
+const INLINE_MATH_TOKEN = 'inlineMath';
+const BLOCK_MATH_TOKEN = 'blockMath';
+
+interface MathToken {
+  type: typeof INLINE_MATH_TOKEN | typeof BLOCK_MATH_TOKEN;
+  raw: string;
+  text: string;
+}
+
+let markedConfigured = false;
+
+function escapeHTML(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function isEscaped(source: string, index: number): boolean {
+  let backslashCount = 0;
+
+  for (let i = index - 1; i >= 0 && source[i] === '\\'; i--) {
+    backslashCount += 1;
+  }
+
+  return backslashCount % 2 === 1;
+}
+
+function findInlineMathEnd(source: string): number {
+  for (let i = 1; i < source.length; i++) {
+    if (source[i] === '\n') {
+      return -1;
+    }
+
+    if (source[i] === '$' && !isEscaped(source, i)) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+function findBlockMathEnd(source: string): number {
+  for (let i = 2; i < source.length - 1; i++) {
+    if (source[i] === '$' && source[i + 1] === '$' && !isEscaped(source, i)) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+function renderMath(tex: string, displayMode: boolean): string {
+  try {
+    return katex.renderToString(tex, {
+      displayMode,
+      strict: 'ignore',
+      throwOnError: false
+    });
+  } catch (error) {
+    console.warn(`   Warning: Failed to render LaTeX: ${tex}`);
+    return displayMode
+      ? `<pre class="math-error">${escapeHTML(tex)}</pre>`
+      : `<span class="math-error">${escapeHTML(tex)}</span>`;
+  }
+}
+
+function configureMarked(): void {
+  if (markedConfigured) {
+    return;
+  }
+
+  marked.use({
     gfm: true,
     breaks: true,
+    extensions: [
+      {
+        name: BLOCK_MATH_TOKEN,
+        level: 'block',
+        start(source: string) {
+          const index = source.indexOf('$$');
+          return index >= 0 ? index : undefined;
+        },
+        tokenizer(source: string) {
+          if (!source.startsWith('$$')) {
+            return undefined;
+          }
+
+          const endIndex = findBlockMathEnd(source);
+          if (endIndex === -1) {
+            return undefined;
+          }
+
+          const text = source.slice(2, endIndex).trim();
+          if (!text) {
+            return undefined;
+          }
+
+          let rawEnd = endIndex + 2;
+          if (source.startsWith('\r\n', rawEnd)) {
+            rawEnd += 2;
+          } else if (source[rawEnd] === '\n') {
+            rawEnd += 1;
+          }
+
+          return {
+            type: BLOCK_MATH_TOKEN,
+            raw: source.slice(0, rawEnd),
+            text
+          };
+        },
+        renderer(token) {
+          return renderMath((token as MathToken).text, true);
+        }
+      },
+      {
+        name: INLINE_MATH_TOKEN,
+        level: 'inline',
+        start(source: string) {
+          const index = source.indexOf('$');
+          return index >= 0 ? index : undefined;
+        },
+        tokenizer(source: string) {
+          if (!source.startsWith('$') || source.startsWith('$$')) {
+            return undefined;
+          }
+
+          if (source.length === 1 || /\s/.test(source[1])) {
+            return undefined;
+          }
+
+          const endIndex = findInlineMathEnd(source);
+          if (endIndex <= 1) {
+            return undefined;
+          }
+
+          const text = source.slice(1, endIndex).trim();
+          if (!text) {
+            return undefined;
+          }
+
+          return {
+            type: INLINE_MATH_TOKEN,
+            raw: source.slice(0, endIndex + 1),
+            text
+          };
+        },
+        renderer(token) {
+          return renderMath((token as MathToken).text, false);
+        }
+      }
+    ]
   });
 
-  return marked(markdownContent);
+  markedConfigured = true;
+}
+
+// Convert markdown to HTML
+function convertMarkdownToHTML(markdownContent: string): string {
+  configureMarked();
+  return marked.parse(transformFootnotes(markdownContent)) as string;
+}
+
+function normalizeMarkdownMathForSearch(markdownContent: string): string {
+  return markdownContent
+    .replace(/\$\$([\s\S]+?)\$\$/g, (_match, tex) => tex.trim())
+    .replace(/\$([^\n$]+?)\$/g, (_match, tex) => tex.trim());
 }
 
 // Compress CSS content
@@ -252,7 +414,8 @@ async function generateSearchIndex(bookData: BookData): Promise<{ indexData: obj
 
     try {
       const markdownContent = await fs.readFile(markdownPath, 'utf-8');
-      const htmlContent = convertMarkdownToHTML(markdownContent);
+      const searchableMarkdown = normalizeMarkdownMathForSearch(markdownContent);
+      const htmlContent = convertMarkdownToHTML(searchableMarkdown);
       const plainText = stripHtml(htmlContent);
 
       const outputFilename = i === 0 ? 'index.html' : chapter.file.replace(/\.md$/, '.html');
@@ -335,6 +498,12 @@ async function build(): Promise<void> {
         await fs.copy(path.join(stylesPath, cssFile), path.join(buildStylesPath, cssFile));
       }
     }
+
+    const katexDistPath = path.join(PROJECT_ROOT, 'node_modules', 'katex', 'dist');
+    await fs.copy(path.join(katexDistPath, 'katex.min.css'), path.join(buildStylesPath, 'katex.min.css'));
+    await fs.copy(path.join(katexDistPath, 'fonts'), path.join(buildStylesPath, 'fonts'));
+    console.log('   Copied: styles/katex.min.css');
+    console.log('   Copied: styles/fonts/ (KaTeX)');
 
     // Copy and compress JavaScript files
     const scriptsPath = path.join(TEMPLATE_PATH, 'scripts');
@@ -456,4 +625,4 @@ if (require.main === module) {
   build();
 }
 
-export { build };
+export { build, convertMarkdownToHTML };

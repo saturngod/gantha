@@ -14,6 +14,9 @@
     --text-primary: #1a1a1a;
     --text-secondary: #666666;
     --border-color: #e0e0e0;
+    --quote-bg: #f7f3e8;
+    --quote-border: #c2873c;
+    --quote-text: #4d3b23;
     --shadow: rgba(0, 0, 0, 0.1);
     --overlay: rgba(0, 0, 0, 0.5);
 
@@ -30,6 +33,9 @@ body.theme-dark {
     --text-primary: #ffffff;
     --text-secondary: #b0b0b0;
     --border-color: #404040;
+    --quote-bg: #2f2820;
+    --quote-border: #d6a15a;
+    --quote-text: #f1dcc0;
     --shadow: rgba(0, 0, 0, 0.3);
     --overlay: rgba(0, 0, 0, 0.7);
 }
@@ -125,6 +131,31 @@ body {
     margin-top: 1.5rem;
 }
 
+.reading-area blockquote {
+    margin: 2rem 0;
+    padding: 1rem 1.25rem 1rem 1.5rem;
+    border-left: 4px solid var(--quote-border);
+    border-radius: 0 14px 14px 0;
+    background-color: var(--quote-bg);
+    color: var(--quote-text);
+}
+
+.reading-area blockquote p:first-child {
+    margin-top: 0;
+}
+
+.reading-area blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+.reading-area blockquote>*:first-child {
+    margin-top: 0;
+}
+
+.reading-area blockquote>*:last-child {
+    margin-bottom: 0;
+}
+
 .reading-area h1 {
     font-weight: 700;
     padding: 1.5rem 0 1rem 0;
@@ -173,6 +204,22 @@ body {
     background-color: #ffffff;
     border-radius: 2px;
     box-shadow: 0 2px 4;
+}
+
+.reading-area .katex-display {
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0.25rem;
+}
+
+.reading-area .katex-display>.katex {
+    min-width: max-content;
+}
+
+.reading-area .math-error {
+    color: #b42318;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 /* List Styles - Optimized for reading */

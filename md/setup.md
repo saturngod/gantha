@@ -183,6 +183,20 @@ graph TD;
     C-->D;
 ```
 
+## Latex Support
+Use between `$`
+Example
+```
+$\log N$
+$\gamma^2+\theta^2=\omega^2$
+```
+
+It will generate 
+
+$\log N$
+
+$\gamma^2+\theta^2=\omega^2$
+
 ## Next Steps
 
 After setup, you can:
