@@ -4,7 +4,7 @@ Gantha is a tool to build static ebook websites from markdown files, optimized f
 
 ## Usage
 
-1. Define your book structure in `toc.json`.
+1. Define your book structure in `toc.json`. You can use `bun update-toc.js` that will generate toc base on md files.
 2. Run `bun run build`.
 3. The output will be in the `build/` directory.
 
