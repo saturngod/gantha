@@ -126,6 +126,23 @@ body {
     line-height: 2rem;
 }
 
+/* View / reading width */
+body.view-compact .main-content {
+    max-width: 800px;
+}
+
+body.view-normal .main-content {
+    max-width: 1200px;
+}
+
+body.view-wide .main-content {
+    max-width: 100%;
+}
+
+body.view-wide .reading-area {
+    max-width: 100%;
+}
+
 .reading-area p {
     margin-bottom: 1.5rem;
     margin-top: 1.5rem;

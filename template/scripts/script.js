@@ -2,6 +2,7 @@
 let currentTheme = 'system';
 let currentFont = 'system';
 let currentAlignment = 'justify';
+let currentView = 'normal';
 
 // DOM Elements
 const menuBtn = document.getElementById('menuBtn');
@@ -30,6 +31,11 @@ const alignStart = document.getElementById('alignStart');
 const alignCenter = document.getElementById('alignCenter');
 const alignEnd = document.getElementById('alignEnd');
 
+// View Radio Buttons
+const viewCompact = document.getElementById('viewCompact');
+const viewNormal = document.getElementById('viewNormal');
+const viewWide = document.getElementById('viewWide');
+
 // Initialize App
 function init() {
     generateFontOptions();
@@ -37,6 +43,7 @@ function init() {
     applyTheme(currentTheme);
     applyFont(currentFont);
     applyAlignment(currentAlignment);
+    applyView(currentView);
 
     // Initialize font size options if available
     if (window.fontSizeManager && window.fontSizeManager.initializeFontSizes) {
@@ -105,6 +112,7 @@ function loadPreferences() {
     const savedTheme = localStorage.getItem('theme');
     const savedFont = localStorage.getItem('font');
     const savedAlignment = localStorage.getItem('alignment');
+    const savedView = localStorage.getItem('view');
 
     if (savedTheme) {
         currentTheme = savedTheme;
@@ -117,6 +125,29 @@ function loadPreferences() {
     if (savedAlignment) {
         currentAlignment = savedAlignment;
     }
+
+    if (savedView) {
+        currentView = savedView;
+    }
+}
+
+// Apply View (reading width)
+function applyView(view) {
+    currentView = view;
+
+    document.body.classList.remove('view-compact', 'view-normal', 'view-wide');
+    document.body.classList.add(`view-${view}`);
+
+    // Update radio button
+    if (view === 'compact' && viewCompact) {
+        viewCompact.checked = true;
+    } else if (view === 'wide' && viewWide) {
+        viewWide.checked = true;
+    } else if (viewNormal) {
+        viewNormal.checked = true;
+    }
+
+    localStorage.setItem('view', view);
 }
 
 // Apply Theme
@@ -326,6 +357,11 @@ function attachEventListeners() {
     if (alignStart) alignStart.addEventListener('change', () => applyAlignment('start'));
     if (alignCenter) alignCenter.addEventListener('change', () => applyAlignment('center'));
     if (alignEnd) alignEnd.addEventListener('change', () => applyAlignment('end'));
+
+    // View radio buttons
+    if (viewCompact) viewCompact.addEventListener('change', () => applyView('compact'));
+    if (viewNormal) viewNormal.addEventListener('change', () => applyView('normal'));
+    if (viewWide) viewWide.addEventListener('change', () => applyView('wide'));
 
     // Font radio buttons are now attached dynamically in generateFontOptions()
 }
