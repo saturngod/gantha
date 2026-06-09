@@ -94,7 +94,7 @@ serve({
     port: PORT,
     async fetch(req: Request) {
         const url = new URL(req.url);
-        let filePath = url.pathname;
+        let filePath = decodeURIComponent(url.pathname);
 
         if (filePath === "/" || filePath === "") {
             filePath = "/index.html";
